@@ -1,38 +1,55 @@
-function time_ago(date, ref_date, date_formats, time_units) {
+function humanized_time_span(date, ref_date, date_formats, time_units) {
   //Date Formats must be be ordered smallest -> largest and must end in a format with ceiling of null
-  var date_formats = date_formats || [
-    { ceiling: 60, text: "$seconds seconds ago" },
-    { ceiling: 3600, text: "$minutes minutes ago" },
-    { ceiling: 86400, text: "$hours hours ago" },
-    { ceiling: 2629744, text: "$days days ago" },
-    { ceiling: 31556926, text: "$months months ago" },
-    { ceiling: null, text: "$years years ago" }
-  ]
+  date_formats = date_formats || {
+    past: [
+      { ceiling: 60, text: "$seconds seconds ago" },
+      { ceiling: 3600, text: "$minutes minutes ago" },
+      { ceiling: 86400, text: "$hours hours ago" },
+      { ceiling: 2629744, text: "$days days ago" },
+      { ceiling: 31556926, text: "$months months ago" },
+      { ceiling: null, text: "$years years ago" }      
+    ],
+    future: [
+      { ceiling: 60, text: "in $seconds seconds" },
+      { ceiling: 3600, text: "in $minutes minutes" },
+      { ceiling: 86400, text: "in $hours hours" },
+      { ceiling: 2629744, text: "in $days days" },
+      { ceiling: 31556926, text: "in $months months" },
+      { ceiling: null, text: "in $years years" }
+    ]
+  };
   //Time units must be be ordered largest -> smallest
-  var time_units = time_units || [
+  time_units = time_units || [
     [31556926, 'years'],
     [2629744, 'months'],
     [86400, 'days'],
     [3600, 'hours'],
     [60, 'minutes'],
     [1, 'seconds']
-  ]
+  ];
   
   date = new Date(date);
   ref_date = ref_date ? new Date(ref_date) : new Date();
   var seconds_difference = (ref_date - date) / 1000;
   
+  var tense = 'future';
+  if (seconds_difference < 0) {
+    tense = 'past';
+    seconds_difference = 0-seconds_difference;
+  }
+  
   function get_format() {
-    for (var i=0; i<date_formats.length; i++) {
-      if (date_formats[i].ceiling == null || seconds_difference <= date_formats[i].ceiling) {
-        return date_formats[i];
+    for (var i=0; i<date_formats[tense].length; i++) {
+      if (date_formats[tense][i].ceiling == null || seconds_difference <= date_formats[tense][i].ceiling) {
+        return date_formats[tense][i];
       }
     }
+    return null;
   }
   
   function get_time_breakdown() {
     var seconds = seconds_difference;
-    var breakdown = {}
+    var breakdown = {};
     for(var i=0; i<time_units.length; i++) {
       var occurences_of_unit = Math.floor(seconds / time_units[i][0]);
       seconds = seconds - (time_units[i][0] * occurences_of_unit);
@@ -44,7 +61,7 @@ function time_ago(date, ref_date, date_formats, time_units) {
   function render_date(date_format) {
     var breakdown = get_time_breakdown();
     var time_ago_text = date_format.text.replace(/\$(\w+)/g, function() {
-      return eval("breakdown." + arguments[1]);
+      return breakdown[arguments[1]];
     });
     return depluralize_time_ago_text(time_ago_text, breakdown);
   }
