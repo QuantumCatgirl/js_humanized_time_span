@@ -32,9 +32,9 @@ function humanized_time_span(date, ref_date, date_formats, time_units) {
   ref_date = ref_date ? new Date(ref_date) : new Date();
   var seconds_difference = (ref_date - date) / 1000;
   
-  var tense = 'future';
+  var tense = 'past';
   if (seconds_difference < 0) {
-    tense = 'past';
+    tense = 'future';
     seconds_difference = 0-seconds_difference;
   }
   
