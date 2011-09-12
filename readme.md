@@ -18,7 +18,7 @@ Only date is required.
 
     humanized_time_span("2010/09/10 10:00:00") => "3 days ago" (using now as a reference)
   
-    humanized_time_span("2010/09/10 10:00:00", "2010/09/10 12:00:00") => "2 days ago"
+    humanized_time_span("2010/09/10 10:00:00", "2010/09/10 12:00:00") => "2 hours ago"
 
 ###Customisation
 
