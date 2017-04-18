@@ -9,18 +9,18 @@ usage
 
 Include the script (it's native JS so doesn't require anything else) and you're ready to go.
 
-###Syntax
+### Syntax
     humanized_time_span(date, ref_date, date_formats, time_units)
   
 Only date is required.
 
-###Examples
+### Examples
 
     humanized_time_span("2010/09/10 10:00:00") => "3 days ago" (using now as a reference)
   
     humanized_time_span("2010/09/10 10:00:00", "2010/09/10 12:00:00") => "2 hours ago"
 
-###Customisation
+### Customisation
 
 Custom date formats can be set as follows:
 
