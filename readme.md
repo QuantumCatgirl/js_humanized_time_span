@@ -10,6 +10,7 @@ usage
 Include the script (it's native JS so doesn't require anything else) and you're ready to go.
 
 ###Syntax
+    
     humanized_time_span(date, ref_date, date_formats, time_units)
   
 Only date is required.
